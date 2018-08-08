@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NPNRU</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="shortcut icon" type="image/png" href="img/logo_anru-01.png"/>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" /><![endif]-->
+
+    <link rel="stylesheet" href="src/leaflet-sidebar.css" />
+
+	<style>
+
+		body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #mapid {
+            height: 100%;
+            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+
+        .lorem {
+            font-style: italic;
+            color: #1d1d1b;
+			em:1.2;
+        }
+		
+		.presentation {
+			display: block;
+		}
+		
+		#popup {
+			display: none;
+		}
+		
+		h1{
+			em:2;
+			text-transform: uppercase;
+			color:#004494;
+			text-align:center;
+		}
+	
+		h2{
+			em:1.8;
+			color: #1d1d1b;
+		}
+
+
+</style>
+</head>
+
+<body>
+    <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab" id="logo_acv"><i class="fa"><img src="img/logo_anru-01.png" style="width:30px;padding:5px"  /></i></a></li>
+                <li><a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" role="tab" target="_blank" title="Site officiel"><i class="fa fa-home"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">
+                    NPNRU
+                    <span class="sidebar-close" id="close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+				
+				<div class="presentation" id="defaut">
+					<h1>Nouveau Programme National de Renouvellement Urbain</h1>
+					<h2>2014-2024 : 5 milliards pour les habitants des quartiers les plus en difficulté</h2>
+					<div id="bouton-int-nat"><img src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />200 quartiers d'intérêt <strong>national</strong> (216 sur la carte!) présentant des dysfonctionnement urbains les plus importants, en Métropole et Outre-Mer, parmi les 1500 quartiers prioritaires politique de la Ville.</div>
+					<div id="bouton-int-reg"><img src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />200 quartiers d'intérêt <strong>régional</strong> (263 sur la carte!)</div>
+					<h2>Une contractualisation en 2 temps</h2>
+					<p><strong>1e phase</strong> : le protocole de préfiguration - 116 protocoles signés (??)</p>
+					<p><strong>2e phase</strong> : la convention opérationnelle - </p>
+				</div>
+
+				<div id="popup">
+					<h1 id="libgeo"></h1>
+					<p id="interet" ></p> 
+					<p id="region" class="lorem"></p> 
+					
+				</div>
+				
+            </div>
+
+            <div class="sidebar-pane" id="profile">
+                <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+
+        </div>
+    </div>
+
+
+	<div id="mapid" class="sidebar-map"></div>
+	
+     <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>
+    <script src="https://turbo87.github.io/sidebar-v2/js/leaflet-sidebar.js"></script>
+	<script type="text/javascript" src="data/masque.js"></script>
+	<script type="text/javascript" src="data/departements.js"></script>
+	<script type="text/javascript" src="data/regions.js"></script>
+	<script type="text/javascript" src="data/npnru_p.js"></script>
+	<script type="text/javascript" src="data/npnru_s.js"></script>
+	
+	
+    <script>
+		
+			
+		// Création de la carte
+		var map = L.map('mapid', {maxZoom:13, minZoom:6
+		//maxBounds: [
+        //south west
+        //[39, -18],
+        //north east
+        //[54, 12]
+        //], 
+		})
+		.setView([46.5, 2], 6);
+		map.zoomControl.setPosition('topright');
+		
+		//Définition des pictos
+		var LeafIcon = L.Icon.extend({
+		options: {
+			//shadowUrl: 'img/shadow.png',
+			//shadowSize:   [23, 45],
+			//shadowAnchor: [0, 0],
+			//iconSize:     [25, 25],
+			//iconAnchor:   [0, 0],
+			//popupAnchor:  [0, -30]
+		}
+		});
+		var national_off = new LeafIcon({iconUrl: 'img/pictos_national_off.png', iconSize: [17,17], iconAnchor:[8.5,8.5]}),
+			regional_off = new LeafIcon({iconUrl: 'img/pictos_regional_off.png', iconSize: [17,17], iconAnchor:[8.5,8.5]}),
+			national_on = new LeafIcon({iconUrl: 'img/pictos_national_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]}),
+			regional_on = new LeafIcon({iconUrl: 'img/pictos_regional_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]});
+
+		// Choix du fond de carte 
+		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+		//attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+		//bounds: [[-75, -180], [81, 180]],
+		//minZoom: 5,
+		//maxZoom: 10,
+		apikey: 'choisirgeoportail',
+		format: 'image/png',
+		style: 'bdparcellaire'
+		});
+		GeoportailFrance_parcels.addTo(map);
+		/*var BasemapAT_basemap = L.tileLayer('https://maps{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.{format}', {
+		maxZoom: 20,
+		attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+		subdomains: ["", "1", "2", "3", "4"],
+		format: 'png',
+		bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
+		});*/
+		
+		
+		//function getColor(propriete){
+		//console.log(propriete);
+		//return "weight": 0, "opacity": 1, fillOpacity: 1, fillColor:
+		//return "#ffb80e";
+		//}
+		
+		//Ajout des couches		
+		Cache = L.geoJSON(JS_masque, {color: "#e6f0ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
+		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#9ac3ff"}).addTo(map);
+		
+		/*ZAU = L.geoJSON(JS_zau, {
+			style: function(feature){
+				if (feature.properties.FIRST_TYPO=="120"){
+					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffb80e"};
+			}
+				else if (feature.properties.FIRST_TYPO=="112"){
+					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffae0e"};
+			}
+				else if (feature.properties.FIRST_TYPO=="111"){
+					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffa40e"};
+			}
+			}
+		})
+		.addTo(map);*/
+		
+		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
+		Departements = L.geoJSON(JS_dep, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}).addTo(map);
+		NPNRU_S = L.geoJSON(JS_npnru_S, {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
+		
+		
+		// Action au clic sur un marker
+		var test;
+		function infos(e) {
+			if (document.getElementById('sidebar').classList.contains('collapsed')){
+				sidebar.open('home');
+				if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
+				}
+			if(test){
+				//console.log(test.feature.properties.INTERET);
+				if (test.feature.properties.INTERET == "national") {test.setIcon(national_off);}
+				else if (test.feature.properties.INTERET == "regional"){test.setIcon(regional_off);};
+				}
+				test = e.target;
+				if (test.feature.properties.INTERET == "national") {test.setIcon(national_on)}
+				else if (test.feature.properties.INTERET == "regional"){test.setIcon(regional_on)};
+				document.getElementById('popup').style.display = "block";
+				document.getElementById('defaut').style.display = "none";
+				document.getElementById('libgeo').innerHTML = e.target.feature.properties.NOMQP;
+				document.getElementById('interet').innerHTML = "Quartier d'intérêt "+e.target.feature.properties.INTERET;
+				document.getElementById('region').innerHTML = "Quartier de la commune <strong>"+e.target.feature.properties.COMMUNE_QP+"</strong>, région <strong>"+e.target.feature.properties.NREG+"</strong>.";
+		}
+		
+		var sidebar = L.control.sidebar('sidebar').addTo(map);
+		
+		NPNRU_nat = L.geoJSON(JS_npnru_P, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:national_off}).on('click', function(e) { infos(e);})
+				},
+				filter : function(feature, layer) {
+                return feature.properties.INTERET == "national";
+				}
+				//onEachFeature : function(feature, layer) {
+				//	layer.bindTooltip(feature.properties.COMMUNE_QP, {closeButton: false, offset: L.point(0, 0)});
+				//	}
+		}).addTo(map)
+		
+		NPNRU_reg = L.geoJSON(JS_npnru_P, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:regional_off}).on('click', function(e) { infos(e);})
+					},
+				filter : function(feature, layer) {
+					return feature.properties.INTERET == "regional";
+					}
+				//onEachFeature : function(feature, layer) {
+				//	layer.bindTooltip(feature.properties.COMMUNE_QP, {closeButton: false, offset: L.point(0, 0)});
+				//	}
+		}).addTo(map)
+				
+		
+		//Events au clic sur la carte
+		map.on('click', function(e) {   
+			//if (document.getElementById('sidebar').classList.contains('collapsed')) {
+			//	sidebar.open('home');
+			//}
+			//else {
+			//	sidebar.close();
+			//	map.setView([46.5, 2], 6);
+			//}
+			document.getElementById('popup').style.display = "none";
+			document.getElementById('defaut').style.display = "block";   
+		});
+		
+		//Carte qui bouge à l'ouverture de la popup
+		document.getElementById("logo_acv").addEventListener("click", function(){
+		if(map.getZoom() < 8){
+		if (document.getElementById('sidebar').classList.contains('collapsed')) {
+		map.panTo([46.5, 2],{duration: 0.5 });}
+		else {map.panTo([46.5, -3],{duration: 0.5 });}
+		}
+		});
+
+		document.getElementById("close").addEventListener("click", function(){
+		if(map.getZoom() < 8){
+		if (document.getElementById('sidebar').classList.contains('collapsed') && map.getZoom() < 8) {
+		map.panTo([46.5, 2],{duration: 0.5 });}
+		else {map.panTo([46.5, -3],{duration: 0.5 });}
+		}
+		}); 
+
+		document.getElementById("bouton-int-nat").addEventListener("click", function(){
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat);}
+			else {map.addLayer(NPNRU_nat);}
+		}); 
+		
+		document.getElementById("bouton-int-reg").addEventListener("click", function(){
+		if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);}
+		else {map.addLayer(NPNRU_reg);}
+		}); 
+
+   </script>
+	
+</body>
+
+
+
+</html>
