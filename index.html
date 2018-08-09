@@ -75,11 +75,13 @@
 				<div class="presentation" id="defaut">
 					<h1>Nouveau Programme National de Renouvellement Urbain</h1>
 					<h2>2014-2024 : 5 milliards pour les habitants des quartiers les plus en difficulté</h2>
-					<div id="bouton-int-nat"><img src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />200 quartiers d'intérêt <strong>national</strong> (216 sur la carte!) présentant des dysfonctionnement urbains les plus importants, en Métropole et Outre-Mer, parmi les 1500 quartiers prioritaires politique de la Ville.</div>
-					<div id="bouton-int-reg"><img src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />200 quartiers d'intérêt <strong>régional</strong> (263 sur la carte!)</div>
-					<h2>Une contractualisation en 2 temps</h2>
-					<p><strong>1e phase</strong> : le protocole de préfiguration - 116 protocoles signés (??)</p>
-					<p><strong>2e phase</strong> : la convention opérationnelle - </p>
+					<div id="bouton-int-nat"><img src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Quartier d'intérêt <strong>national</strong> </div>
+					<div id="bouton-int-reg"><img src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Quartier d'intérêt <strong>régional</strong> </div>
+					<h2>Les conventions opérationnelles</h2>
+					<p>Les conventions seront signées par les intercommunalités tout le long des années 2017 et 2018</p>
+					<div id="bouton-int-conv"><img src="img/pictos_conventions.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Avancement des signatures au 9 août 2018</div>
+					<br/>
+					<p><i>Source : <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018</a></i></p>
 				</div>
 
 				<div id="popup">
@@ -106,6 +108,7 @@
 	<script type="text/javascript" src="data/masque.js"></script>
 	<script type="text/javascript" src="data/departements.js"></script>
 	<script type="text/javascript" src="data/regions.js"></script>
+	<script type="text/javascript" src="data/epci2018.js"></script>
 	<script type="text/javascript" src="data/npnru_p.js"></script>
 	<script type="text/javascript" src="data/npnru_s.js"></script>
 	
@@ -114,87 +117,81 @@
 		
 			
 		// Création de la carte
-		var map = L.map('mapid', {maxZoom:13, minZoom:6
-		//maxBounds: [
-        //south west
-        //[39, -18],
-        //north east
-        //[54, 12]
-        //], 
+		var map = L.map('mapid', {maxZoom:11, minZoom:6 
 		})
 		.setView([46.5, 2], 6);
 		map.zoomControl.setPosition('topright');
 		
 		//Définition des pictos
-		var LeafIcon = L.Icon.extend({
-		options: {
-			//shadowUrl: 'img/shadow.png',
-			//shadowSize:   [23, 45],
-			//shadowAnchor: [0, 0],
-			//iconSize:     [25, 25],
-			//iconAnchor:   [0, 0],
-			//popupAnchor:  [0, -30]
-		}
-		});
-		var national_off = new LeafIcon({iconUrl: 'img/pictos_national_off.png', iconSize: [17,17], iconAnchor:[8.5,8.5]}),
-			regional_off = new LeafIcon({iconUrl: 'img/pictos_regional_off.png', iconSize: [17,17], iconAnchor:[8.5,8.5]}),
-			national_on = new LeafIcon({iconUrl: 'img/pictos_national_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]}),
-			regional_on = new LeafIcon({iconUrl: 'img/pictos_regional_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]});
+		var national_off = new L.Icon({iconUrl: 'img/pictos_ptt_national_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
+			regional_off = new L.Icon({iconUrl: 'img/pictos_ptt_regional_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
+			national_on = new L.Icon({iconUrl: 'img/pictos_ptt_national_on.png', iconSize: [20,20], iconAnchor:[10,10]}),
+			regional_on = new L.Icon({iconUrl: 'img/pictos_ptt_regional_on.png', iconSize: [20,20], iconAnchor:[10,10]});
 
 		// Choix du fond de carte 
 		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
-		//attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
-		//bounds: [[-75, -180], [81, 180]],
-		//minZoom: 5,
-		//maxZoom: 10,
 		apikey: 'choisirgeoportail',
 		format: 'image/png',
 		style: 'bdparcellaire'
 		});
 		GeoportailFrance_parcels.addTo(map);
-		/*var BasemapAT_basemap = L.tileLayer('https://maps{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.{format}', {
-		maxZoom: 20,
-		attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
-		subdomains: ["", "1", "2", "3", "4"],
-		format: 'png',
-		bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
-		});*/
+
 		
-		
-		//function getColor(propriete){
-		//console.log(propriete);
-		//return "weight": 0, "opacity": 1, fillOpacity: 1, fillColor:
-		//return "#ffb80e";
-		//}
-		
-		//Ajout des couches		
+		//Ajout des couches du fond de carte
 		Cache = L.geoJSON(JS_masque, {color: "#e6f0ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
 		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#9ac3ff"}).addTo(map);
-		
-		/*ZAU = L.geoJSON(JS_zau, {
-			style: function(feature){
-				if (feature.properties.FIRST_TYPO=="120"){
-					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffb80e"};
-			}
-				else if (feature.properties.FIRST_TYPO=="112"){
-					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffae0e"};
-			}
-				else if (feature.properties.FIRST_TYPO=="111"){
-					return {opacity: 1, fillOpacity: 1, weight: 0, color:"#ffa40e"};
-			}
-			}
-		})
-		.addTo(map);*/
-		
 		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
+		//Contour_Regions_notGEN = L.geoJSON(JS_reg_notGEN, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0});
 		Departements = L.geoJSON(JS_dep, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}).addTo(map);
+		//Departements_notGEN = L.geoJSON(JS_dep_notGEN, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0});
+		//Communes = L.geoJSON(JS_com2018, {color: "#ffffff", weight: 0.5, opacity: 0.7, fillOpacity: 0});
+		EPCI = L.geoJSON(JS_epci2018, {
+			style: {fillColor: "red", weight: 0, opacity: 1, fillOpacity: 1},
+			filter: function(feature, layer) {
+                return feature.properties.codgeo == "200072130" || feature.properties.codgeo == "246200729" || feature.properties.codgeo == "245901160" || feature.properties.codgeo == "200054781" || feature.properties.codgeo == "200027183" || feature.properties.codgeo == "200046977";
+				},
+			onEachFeature: onEachFeature
+			}).addTo(map);
 		NPNRU_S = L.geoJSON(JS_npnru_S, {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
 		
+		function onEachFeature(feature,layer) {
+			layer.on ({
+			click : function(e){
+				if (document.getElementById('sidebar').classList.contains('collapsed')){
+					sidebar.open('home');
+					if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
+					}
+				L.DomEvent.stopPropagation(e);
+				document.getElementById('popup').style.display = "block";
+				document.getElementById('defaut').style.display = "none";
+				document.getElementById('libgeo').innerHTML = feature.properties.libgeo;
+				document.getElementById('interet').innerHTML = "Convention signée";
+				}
+			});
+		}
+		
+		//Modification des couches du fond de carte avec le zoom sur la carte
+		/*map.on('zoomend', function zoomendEvent() {
+			var zoom = map.getZoom();
+			if (zoom > 8 && map.hasLayer(Contour_Regions)) {
+				map.removeLayer(Contour_Regions);
+				map.removeLayer(Departements);
+				map.addLayer(Departements_notGEN);
+				map.addLayer(Contour_Regions_notGEN);
+				}
+			else if (zoom < 9 && map.hasLayer(Contour_Regions_notGEN)) {
+				map.removeLayer(Departements_notGEN);
+				map.removeLayer(Contour_Regions_notGEN);
+				map.addLayer(Contour_Regions);
+				map.addLayer(Departements);
+				}
+		})*/
 		
 		// Action au clic sur un marker
 		var test;
 		function infos(e) {
 			if (document.getElementById('sidebar').classList.contains('collapsed')){
+				
 				sidebar.open('home');
 				if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
 				}
@@ -213,8 +210,10 @@
 				document.getElementById('region').innerHTML = "Quartier de la commune <strong>"+e.target.feature.properties.COMMUNE_QP+"</strong>, région <strong>"+e.target.feature.properties.NREG+"</strong>.";
 		}
 		
+		//Création de la sidebar
 		var sidebar = L.control.sidebar('sidebar').addTo(map);
 		
+		//Ajout des couches NPNRU
 		NPNRU_nat = L.geoJSON(JS_npnru_P, {
 				pointToLayer: function(feature, latlng) {
 					return L.marker(latlng,{icon:national_off}).on('click', function(e) { infos(e);})
@@ -242,15 +241,10 @@
 		
 		//Events au clic sur la carte
 		map.on('click', function(e) {   
-			//if (document.getElementById('sidebar').classList.contains('collapsed')) {
-			//	sidebar.open('home');
-			//}
-			//else {
-			//	sidebar.close();
-			//	map.setView([46.5, 2], 6);
-			//}
 			document.getElementById('popup').style.display = "none";
 			document.getElementById('defaut').style.display = "block";   
+			map.addLayer(NPNRU_reg);
+			map.addLayer(NPNRU_nat);
 		});
 		
 		//Carte qui bouge à l'ouverture de la popup
@@ -271,14 +265,21 @@
 		}); 
 
 		document.getElementById("bouton-int-nat").addEventListener("click", function(){
-			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat);}
-			else {map.addLayer(NPNRU_nat);}
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg)};
+			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat);}
 		}); 
 		
 		document.getElementById("bouton-int-reg").addEventListener("click", function(){
-		if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);}
-		else {map.addLayer(NPNRU_reg);}
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat)};
+			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg);}
 		}); 
+		
+		document.getElementById("bouton-int-conv").addEventListener("click", function(){
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat)};
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);}
+		});
+		
+		
 
    </script>
 	
