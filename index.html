@@ -336,8 +336,7 @@
 		}); 
 
 		document.getElementById("bouton-int-nat").addEventListener("click", function(){
-			event.stopPropagation();
-			//document.getElementById('picto_nat').src="img/pictos_ptt_national_on.png";
+			if (event.stopPropagation) {event.stopPropagation();}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton_on");
