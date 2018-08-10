@@ -30,6 +30,23 @@
 			em:1.2;
         }
 		
+		.bouton {
+		color:#1d1d1b;
+		font-weight: bold;
+		cursor: pointer;
+		height: 21px;
+		}
+		
+		.bouton:hover {
+		color: #004494;
+		}
+		
+		.bouton_on {
+		color: red;
+		font-weight: bold;
+		height: 21px;
+		}
+		
 		.presentation {
 			display: block;
 		}
@@ -75,13 +92,13 @@
 				<div class="presentation" id="defaut">
 					<h1>Nouveau Programme National de Renouvellement Urbain</h1>
 					<h2>2014-2024 : 5 milliards pour les habitants des quartiers les plus en difficulté</h2>
-					<div id="bouton-int-nat"><img src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Quartier d'intérêt <strong>national</strong> </div>
-					<div id="bouton-int-reg"><img src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Quartier d'intérêt <strong>régional</strong> </div>
+					<div class="bouton" id="bouton-int-nat"><img id="picto_nat" src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt national</div>
+					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
 					<h2>Les conventions opérationnelles</h2>
 					<p>Les conventions seront signées par les intercommunalités tout le long des années 2017 et 2018</p>
-					<div id="bouton-int-conv"><img src="img/pictos_conventions.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Avancement des signatures au 9 août 2018</div>
+					<div class="bouton" id="bouton-int-conv"><img src="img/pictos_conventions.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Avancement des signatures au 9 août 2018</div>
 					<br/>
-					<p><i>Source : <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018</a></i></p>
+					<p><i>Source <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018</a> • Réalisation <a href="http://www.cget.gouv.fr/ressources/cartotheque" style="text-decoration:none;" target="_blanck ">CGET service cartographie</a></i></p>
 				</div>
 
 				<div id="popup">
@@ -111,6 +128,7 @@
 	<script type="text/javascript" src="data/epci2018.js"></script>
 	<script type="text/javascript" src="data/npnru_p.js"></script>
 	<script type="text/javascript" src="data/npnru_s.js"></script>
+	<script type="text/javascript" src="data/cercles_drom.js"></script>
 	
 	
     <script>
@@ -124,6 +142,7 @@
 		
 		//Définition des pictos
 		var national_off = new L.Icon({iconUrl: 'img/pictos_ptt_national_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
+			national_off_grd = new L.Icon({iconUrl: 'img/pictos_ptt_national_off.png', iconSize: [12,12], iconAnchor:[6,6]}),
 			regional_off = new L.Icon({iconUrl: 'img/pictos_ptt_regional_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
 			national_on = new L.Icon({iconUrl: 'img/pictos_ptt_national_on.png', iconSize: [20,20], iconAnchor:[10,10]}),
 			regional_on = new L.Icon({iconUrl: 'img/pictos_ptt_regional_on.png', iconSize: [20,20], iconAnchor:[10,10]});
@@ -141,6 +160,7 @@
 		Cache = L.geoJSON(JS_masque, {color: "#e6f0ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
 		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#9ac3ff"}).addTo(map);
 		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
+		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0}).addTo(map);
 		//Contour_Regions_notGEN = L.geoJSON(JS_reg_notGEN, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0});
 		Departements = L.geoJSON(JS_dep, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}).addTo(map);
 		//Departements_notGEN = L.geoJSON(JS_dep_notGEN, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0});
@@ -148,11 +168,31 @@
 		EPCI = L.geoJSON(JS_epci2018, {
 			style: {fillColor: "red", weight: 0, opacity: 1, fillOpacity: 1},
 			filter: function(feature, layer) {
-                return feature.properties.codgeo == "200072130" || feature.properties.codgeo == "246200729" || feature.properties.codgeo == "245901160" || feature.properties.codgeo == "200054781" || feature.properties.codgeo == "200027183" || feature.properties.codgeo == "200046977";
+                return feature.properties.CONVENTION == "oui";
 				},
 			onEachFeature: onEachFeature
 			}).addTo(map);
-		NPNRU_S = L.geoJSON(JS_npnru_S, {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
+		
+		NPNRU_nat_S = L.geoJSON(JS_npnru_S, {
+			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
+			filter: function(feature, layer) {
+                return feature.properties.INTERET == "national";
+				}
+		}).addTo(map);
+		
+		NPNRU_reg_S = L.geoJSON(JS_npnru_S, {
+			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
+			filter: function(feature, layer) {
+                return feature.properties.INTERET == "regional";
+				}
+		}).addTo(map);
+		
+		NPNRU_nat_S_select = L.geoJSON(JS_npnru_S, {
+			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
+			filter: function(feature, layer) {
+                return feature.properties.INTERET == "national" && feature.properties.CONVENTION == "oui";
+				}
+		})
 		
 		function onEachFeature(feature,layer) {
 			layer.on ({
@@ -226,6 +266,15 @@
 				//	}
 		}).addTo(map)
 		
+		NPNRU_nat_select = L.geoJSON(JS_npnru_P, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:national_off_grd}).on('click', function(e) { infos(e);})//.on('dblclick', function(e) {map.flyTo(latlng,10);})
+				},
+				filter : function(feature, layer) {
+                return feature.properties.INTERET == "national" && feature.properties.CONVENTION == "oui" ;
+				}
+		})
+		
 		NPNRU_reg = L.geoJSON(JS_npnru_P, {
 				pointToLayer: function(feature, latlng) {
 					return L.marker(latlng,{icon:regional_off}).on('click', function(e) { infos(e);})
@@ -240,11 +289,33 @@
 				
 		
 		//Events au clic sur la carte
-		map.on('click', function(e) {   
+		map.on('click', function(e) {  
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
 			document.getElementById('popup').style.display = "none";
 			document.getElementById('defaut').style.display = "block";   
-			map.addLayer(NPNRU_reg);
-			map.addLayer(NPNRU_nat);
+			map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);
+			map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);
+			if(map.getZoom() < 8){
+			if (document.getElementById('sidebar').classList.contains('collapsed')) {
+				sidebar.open('home');
+				map.panTo([46.5, -3],{duration: 0.5 });
+			}
+			else {
+				sidebar.close();
+				map.panTo([46.5, 2],{duration: 0.5 });
+			}}
+		});
+		
+		document.getElementById("sidebar").addEventListener("click", function(){
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
+			document.getElementById('popup').style.display = "none";
+			document.getElementById('defaut').style.display = "block";   
+			map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);
+			map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);
 		});
 		
 		//Carte qui bouge à l'ouverture de la popup
@@ -265,18 +336,33 @@
 		}); 
 
 		document.getElementById("bouton-int-nat").addEventListener("click", function(){
-			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg)};
-			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat);}
+			event.stopPropagation();
+			//document.getElementById('picto_nat').src="img/pictos_ptt_national_on.png";
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton_on");
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); map.removeLayer(NPNRU_reg_S);};
+			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);}
 		}); 
 		
 		document.getElementById("bouton-int-reg").addEventListener("click", function(){
-			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat)};
-			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg);}
+			event.stopPropagation();
+			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton_on");
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat); map.removeLayer(NPNRU_nat_S);};
+			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);}
 		}); 
 		
 		document.getElementById("bouton-int-conv").addEventListener("click", function(){
-			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat)};
-			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);}
+			event.stopPropagation();
+			document.getElementById('bouton-int-conv').setAttribute("class", "bouton_on");
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat); map.removeLayer(NPNRU_nat_S);}
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); map.removeLayer(NPNRU_reg_S);}
+			map.addLayer(NPNRU_nat_S_select);
+			map.addLayer(NPNRU_nat_select);
 		});
 		
 		
