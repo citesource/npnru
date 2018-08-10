@@ -335,7 +335,7 @@
 		}
 		}); 
 
-		document.getElementById("bouton-int-nat").addEventListener("click", function(){
+		document.getElementById("bouton-int-nat").addEventListener("click", function(event){
 			if (event.stopPropagation) {event.stopPropagation();}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
@@ -344,7 +344,7 @@
 			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);}
 		}); 
 		
-		document.getElementById("bouton-int-reg").addEventListener("click", function(){
+		document.getElementById("bouton-int-reg").addEventListener("click", function(event){
 			event.stopPropagation();
 			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
@@ -353,7 +353,7 @@
 			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);}
 		}); 
 		
-		document.getElementById("bouton-int-conv").addEventListener("click", function(){
+		document.getElementById("bouton-int-conv").addEventListener("click", function(event){
 			event.stopPropagation();
 			document.getElementById('bouton-int-conv').setAttribute("class", "bouton_on");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
