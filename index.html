@@ -7,6 +7,7 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="shortcut icon" type="image/png" href="img/logo_anru-01.png"/>
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="//labs.easyblog.it/maps/leaflet-search/src/leaflet-search.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" /><![endif]-->
 
@@ -29,6 +30,25 @@
             color: #1d1d1b;
 			em:1.2;
         }
+		
+		.TooltipsREG {
+		em:0.7;
+		font-weight: bold;
+		color: #ac003f;
+		background-color: #f0f1ff;
+		}
+		
+		.TooltipsNAT {
+		em:0.7;
+		font-weight: bold;
+		color: #ff6400;
+		background-color: #f0f1ff;
+		}
+	
+	
+		.leaflet-popup-tip-container {
+			display: none;
+		} 
 		
 		.bouton {
 		color:#1d1d1b;
@@ -66,6 +86,11 @@
 			em:1.8;
 			color: #1d1d1b;
 		}
+		
+		h3{
+			em:1.4;
+			color: #1d1d1b;
+		}
 
 
 </style>
@@ -77,7 +102,8 @@
         <div class="sidebar-tabs">
             <ul role="tablist">
                 <li><a href="#home" role="tab" id="logo_acv"><i class="fa"><img src="img/logo_anru-01.png" style="width:30px;padding:5px"  /></i></a></li>
-                <li><a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" role="tab" target="_blank" title="Site officiel"><i class="fa fa-home"></i></a></li>
+                <li><a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" role="tab" target="_blank" title="Site de l'ANRU"><i class="fa fa-home"></i></a></li>
+				<li><a href="https://cget-carto.github.io/npnru/img/NPNRU_carteA3_BD.jpg" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
             </ul>
         </div>
 
@@ -91,21 +117,30 @@
 				
 				<div class="presentation" id="defaut">
 					<h1>Nouveau Programme National de Renouvellement Urbain</h1>
-					<h2>2014-2024 : 5 milliards pour les habitants des quartiers les plus en difficulté</h2>
-					<div class="bouton" id="bouton-int-nat"><img id="picto_nat" src="img/pictos_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt national</div>
-					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/pictos_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
-					<h2>Les conventions opérationnelles</h2>
-					<p>Les conventions seront signées par les intercommunalités tout le long des années 2017 et 2018</p>
-					<div class="bouton" id="bouton-int-conv"><img src="img/pictos_conventions.png" style="width:17px; padding-right:5px; vertical-align:middle;"  />Avancement des signatures au 9 août 2018</div>
+					<p>Texte de présentation générale du programme NPNRU: calendrier - partenaires - objectifs - enjeux - quels territoires - rôle de l'ANRU</p>
+					<p>Carte interactive de suivi du programme : intérêt d'avoir une carte interactive avec mise à jour en temps réèl (?) - qui signe les conventions - de quelle façon</p>
+					<h2>Quartiers prioritaires de la politique de la ville bénéficiant du NPNRU</h2>
+					<p><i>Cliquer sur un quartier pour avoir plus d'infos ou sélectionner un type de quartier pour l'idenfier sur la carte</i></p>
+					<h3 id="bouton-int-nat-titre" class="bouton">216 quartiers d'intérêt national</h3>
+					<div class="bouton" id="bouton-int-nat-val"><img id="picto_nat" src="img/pictos_leg_national_val_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet validé</div>
+					<div class="bouton" id="bouton-int-nat"><img id="picto_reg" src="img/pictos_leg_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet non validé</div>
+					
+					<h3>264 quartiers d'intérêt régional</h3>
+					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/pictos_leg_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
+					
+					
 					<br/>
-					<p><i>Source <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018</a> • Réalisation <a href="http://www.cget.gouv.fr/ressources/cartotheque" style="text-decoration:none;" target="_blanck ">CGET service cartographie</a></i></p>
+					<p><i>Sources : <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018, </a><a href="http://www.onpv.fr/" style="text-decoration:none;" target="_blanck ">ONPV</a> • Réalisation : <a href="http://www.cget.gouv.fr/ressources/cartotheque" style="text-decoration:none;" target="_blanck ">CGET service cartographie</a></i></p>
 				</div>
 
 				<div id="popup">
 					<h1 id="libgeo"></h1>
+					<h2 id="quartier"></h2>
 					<p id="interet" ></p> 
-					<p id="region" class="lorem"></p> 
-					
+					<p id="date" ></p>
+					<p id="epci" ></p>
+					<p id="region" class="lorem"></p>
+					<p id="plus"></p>					
 				</div>
 				
             </div>
@@ -120,7 +155,8 @@
 
 	<div id="mapid" class="sidebar-map"></div>
 	
-     <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>
+	<script src="http://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.js"></script>
     <script src="https://turbo87.github.io/sidebar-v2/js/leaflet-sidebar.js"></script>
 	<script type="text/javascript" src="data/masque.js"></script>
 	<script type="text/javascript" src="data/departements.js"></script>
@@ -141,74 +177,46 @@
 		map.zoomControl.setPosition('topright');
 		
 		//Définition des pictos
-		var national_off = new L.Icon({iconUrl: 'img/pictos_ptt_national_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
-			national_off_grd = new L.Icon({iconUrl: 'img/pictos_ptt_national_off.png', iconSize: [12,12], iconAnchor:[6,6]}),
-			regional_off = new L.Icon({iconUrl: 'img/pictos_ptt_regional_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
-			national_on = new L.Icon({iconUrl: 'img/pictos_ptt_national_on.png', iconSize: [20,20], iconAnchor:[10,10]}),
-			regional_on = new L.Icon({iconUrl: 'img/pictos_ptt_regional_on.png', iconSize: [20,20], iconAnchor:[10,10]});
-
+		var	regional_off = new L.Icon({iconUrl: 'img/pictos_regional_off.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			regional_on = new L.Icon({iconUrl: 'img/pictos_regional_on.png', iconSize: [23,23], iconAnchor:[11.5,11.5]}),
+			national_off = new L.Icon({iconUrl: 'img/pictos_national_off.png', iconSize: [17,17], iconAnchor:[7.8,7.8]}),
+			national_on = new L.Icon({iconUrl: 'img/pictos_national_on.png', iconSize: [25,25], iconAnchor:[12.5,12.5]}),
+			national_val_off = new L.Icon({iconUrl: 'img/pictos_national_val_off.png', iconSize: [19,19], iconAnchor:[9.5,9.5]}),
+			national_val_on = new L.Icon({iconUrl: 'img/pictos_national_val_on.png', iconSize: [27,27], iconAnchor:[13.5,13.5]});
+			
 		// Choix du fond de carte 
 		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
 		apikey: 'choisirgeoportail',
 		format: 'image/png',
 		style: 'bdparcellaire'
 		});
-		GeoportailFrance_parcels.addTo(map);
+		//GeoportailFrance_parcels.addTo(map);
 
+		/*function Showlabel(feature,layer){
+		layer.bindTooltip(feature.properties.codgeo, {className: 'Tooltips', direction: "center", permanent: true});
+		}*/
 		
 		//Ajout des couches du fond de carte
-		Cache = L.geoJSON(JS_masque, {color: "#e6f0ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
-		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#9ac3ff"}).addTo(map);
+		Cache = L.geoJSON(JS_masque, {color: "#f0f1ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
+		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#a8bdff"}).addTo(map);
 		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
 		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0}).addTo(map);
 		//Contour_Regions_notGEN = L.geoJSON(JS_reg_notGEN, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0});
-		Departements = L.geoJSON(JS_dep, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}).addTo(map);
+		Departements = L.geoJSON(JS_dep, {
+			style:{color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}
+			//onEachFeature : Showlabel
+		}).addTo(map);
 		//Departements_notGEN = L.geoJSON(JS_dep_notGEN, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0});
 		//Communes = L.geoJSON(JS_com2018, {color: "#ffffff", weight: 0.5, opacity: 0.7, fillOpacity: 0});
-		EPCI = L.geoJSON(JS_epci2018, {
+		/*EPCI = L.geoJSON(JS_epci2018, {
 			style: {fillColor: "red", weight: 0, opacity: 1, fillOpacity: 1},
 			filter: function(feature, layer) {
                 return feature.properties.CONVENTION == "oui";
 				},
 			onEachFeature: onEachFeature
-			}).addTo(map);
+			}).addTo(map);*/
 		
-		NPNRU_nat_S = L.geoJSON(JS_npnru_S, {
-			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
-			filter: function(feature, layer) {
-                return feature.properties.INTERET == "national";
-				}
-		}).addTo(map);
-		
-		NPNRU_reg_S = L.geoJSON(JS_npnru_S, {
-			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
-			filter: function(feature, layer) {
-                return feature.properties.INTERET == "regional";
-				}
-		}).addTo(map);
-		
-		NPNRU_nat_S_select = L.geoJSON(JS_npnru_S, {
-			style: {fillColor: "#ffffff", weight: 0, opacity: 1, fillOpacity: 1},
-			filter: function(feature, layer) {
-                return feature.properties.INTERET == "national" && feature.properties.CONVENTION == "oui";
-				}
-		})
-		
-		function onEachFeature(feature,layer) {
-			layer.on ({
-			click : function(e){
-				if (document.getElementById('sidebar').classList.contains('collapsed')){
-					sidebar.open('home');
-					if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
-					}
-				L.DomEvent.stopPropagation(e);
-				document.getElementById('popup').style.display = "block";
-				document.getElementById('defaut').style.display = "none";
-				document.getElementById('libgeo').innerHTML = feature.properties.libgeo;
-				document.getElementById('interet').innerHTML = "Convention signée";
-				}
-			});
-		}
+
 		
 		//Modification des couches du fond de carte avec le zoom sur la carte
 		/*map.on('zoomend', function zoomendEvent() {
@@ -228,104 +236,135 @@
 		})*/
 		
 		// Action au clic sur un marker
-		var test;
+		var markerSelectionne;
+		var color="ac003f";
+		
 		function infos(e) {
+		//console.log(e);
 			if (document.getElementById('sidebar').classList.contains('collapsed')){
-				
 				sidebar.open('home');
 				if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
 				}
-			if(test){
-				//console.log(test.feature.properties.INTERET);
-				if (test.feature.properties.INTERET == "national") {test.setIcon(national_off);}
-				else if (test.feature.properties.INTERET == "regional"){test.setIcon(regional_off);};
+			if(markerSelectionne){
+				if (markerSelectionne.feature.properties.INTERET == "national" && markerSelectionne.feature.properties.VALIDE == "oui") {markerSelectionne.setIcon(national_val_off);}
+				else if (markerSelectionne.feature.properties.INTERET == "regional"){markerSelectionne.setIcon(regional_off);}
+				else {markerSelectionne.setIcon(national_off);};
 				}
-				test = e.target;
-				if (test.feature.properties.INTERET == "national") {test.setIcon(national_on)}
-				else if (test.feature.properties.INTERET == "regional"){test.setIcon(regional_on)};
-				document.getElementById('popup').style.display = "block";
-				document.getElementById('defaut').style.display = "none";
-				document.getElementById('libgeo').innerHTML = e.target.feature.properties.NOMQP;
-				document.getElementById('interet').innerHTML = "Quartier d'intérêt "+e.target.feature.properties.INTERET;
-				document.getElementById('region').innerHTML = "Quartier de la commune <strong>"+e.target.feature.properties.COMMUNE_QP+"</strong>, région <strong>"+e.target.feature.properties.NREG+"</strong>.";
+			
+			markerSelectionne = e.target;
+			//if(markerRecherche) {
+			//markerSetectionne = e;
+			//}
+			
+			if (markerSelectionne.feature.properties.INTERET == "national" && markerSelectionne.feature.properties.VALIDE == "oui") {
+				markerSelectionne.setIcon(national_val_on);
+				 color="ff6400";
+				}
+			else if (markerSelectionne.feature.properties.INTERET == "regional"){markerSelectionne.setIcon(regional_on);color="ac003f";}
+			else {markerSelectionne.setIcon(national_on); color="ff6400";};
+			
+			document.getElementById('popup').style.display = "block";
+			document.getElementById('defaut').style.display = "none";
+			document.getElementById('date').style.display = "none";
+			document.getElementById('libgeo').innerHTML = e.target.feature.properties.COMMUNE_QP+" ("+e.target.feature.properties.DEP+")";
+			document.getElementById('quartier').innerHTML = "<font color='#"+color+"'>"+e.target.feature.properties.NOM_QP+"</font>";
+			document.getElementById('epci').innerHTML = "Intercommunalité(s) signataire(s) : <strong>"+e.target.feature.properties.libgeo;
+			document.getElementById('region').innerHTML = "Région <strong>"+e.target.feature.properties.NREG+"</strong>";
+			document.getElementById('interet').innerHTML = "Quartier d'intérêt <strong><font color='#"+color+"'>"+e.target.feature.properties.INTERET+"</font></strong>";
+			if(markerSelectionne.feature.properties.VALIDE == "oui") {
+				document.getElementById('date').innerHTML = "Projet validé : <strong>"+e.target.feature.properties.VALIDATION+"</strong>";
+				document.getElementById('date').style.display = "block";
+				}
+			document.getElementById('plus').innerHTML = "<a href='https://sig.ville.gouv.fr/Territoire/"+e.target.feature.properties.CODE_QP+" ' style='text-decoration:none;' target='_blanck'>Pour en savoir plus</a>";
 		}
 		
 		//Création de la sidebar
 		var sidebar = L.control.sidebar('sidebar').addTo(map);
 		
 		//Ajout des couches NPNRU
-		NPNRU_nat = L.geoJSON(JS_npnru_P, {
-				pointToLayer: function(feature, latlng) {
-					return L.marker(latlng,{icon:national_off}).on('click', function(e) { infos(e);})
-				},
-				filter : function(feature, layer) {
-                return feature.properties.INTERET == "national";
-				}
-				//onEachFeature : function(feature, layer) {
-				//	layer.bindTooltip(feature.properties.COMMUNE_QP, {closeButton: false, offset: L.point(0, 0)});
-				//	}
-		}).addTo(map)
-		
-		NPNRU_nat_select = L.geoJSON(JS_npnru_P, {
-				pointToLayer: function(feature, latlng) {
-					return L.marker(latlng,{icon:national_off_grd}).on('click', function(e) { infos(e);})//.on('dblclick', function(e) {map.flyTo(latlng,10);})
-				},
-				filter : function(feature, layer) {
-                return feature.properties.INTERET == "national" && feature.properties.CONVENTION == "oui" ;
-				}
-		})
-		
 		NPNRU_reg = L.geoJSON(JS_npnru_P, {
 				pointToLayer: function(feature, latlng) {
 					return L.marker(latlng,{icon:regional_off}).on('click', function(e) { infos(e);})
 					},
 				filter : function(feature, layer) {
 					return feature.properties.INTERET == "regional";
+					},
+				onEachFeature : function(feature, layer) {
+					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsREG', closeButton: false});
 					}
-				//onEachFeature : function(feature, layer) {
-				//	layer.bindTooltip(feature.properties.COMMUNE_QP, {closeButton: false, offset: L.point(0, 0)});
-				//	}
 		}).addTo(map)
-				
+		
+		NPNRU_nat = L.geoJSON(JS_npnru_P, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:national_off}).on('click', function(e) { infos(e);})
+				},
+				filter : function(feature, layer) {
+                return feature.properties.INTERET == "national" && (feature.properties.VALIDE == "non" || feature.properties.VALIDE == "inconnu")  ;
+				},
+				onEachFeature : function(feature, layer) {
+					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsNAT', closeButton: false});
+					}
+		}).addTo(map)
+		
+		NPNRU_nat_val = L.geoJSON(JS_npnru_P, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:national_val_off}).on('click', function(e) { infos(e);})
+				},
+				filter : function(feature, layer) {
+                return feature.properties.INTERET == "national" && feature.properties.VALIDE == "oui";
+				},
+				onEachFeature : function(feature, layer) {
+					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsNAT', closeButton: false});
+					}
+		}).addTo(map)
+		
 		
 		//Events au clic sur la carte
 		map.on('click', function(e) {  
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
-			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
 			document.getElementById('popup').style.display = "none";
 			document.getElementById('defaut').style.display = "block";   
-			map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);
-			map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);
+			map.addLayer(NPNRU_reg); 
+			map.addLayer(NPNRU_nat); 
+			map.addLayer(NPNRU_nat_val);
 			if(map.getZoom() < 8){
 			if (document.getElementById('sidebar').classList.contains('collapsed')) {
 				sidebar.open('home');
 				map.panTo([46.5, -3],{duration: 0.5 });
 			}
-			else {
-				sidebar.close();
-				map.panTo([46.5, 2],{duration: 0.5 });
-			}}
+			//else {
+			//	sidebar.close();
+			//	map.panTo([46.5, 2],{duration: 0.5 });
+			//}
+			}
 		});
 		
 		document.getElementById("sidebar").addEventListener("click", function(){
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
-			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
 			document.getElementById('popup').style.display = "none";
 			document.getElementById('defaut').style.display = "block";   
-			map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);
-			map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);
+			map.addLayer(NPNRU_reg); 
+			map.addLayer(NPNRU_nat);
+			map.addLayer(NPNRU_nat_val);			
 		});
 		
 		//Carte qui bouge à l'ouverture de la popup
 		document.getElementById("logo_acv").addEventListener("click", function(){
+		document.getElementById('popup').style.display = "none";
+		document.getElementById('defaut').style.display = "block";
 		if(map.getZoom() < 8){
 		if (document.getElementById('sidebar').classList.contains('collapsed')) {
-		map.panTo([46.5, 2],{duration: 0.5 });}
+		//map.panTo([46.5, 2],{duration: 0.5 });
+		sidebar.open('home');}
 		else {map.panTo([46.5, -3],{duration: 0.5 });}
 		}
 		});
+		
+		
 
 		document.getElementById("close").addEventListener("click", function(){
 		if(map.getZoom() < 8){
@@ -338,33 +377,81 @@
 		document.getElementById("bouton-int-nat").addEventListener("click", function(event){
 			if (event.stopPropagation) {event.stopPropagation();}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
-			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton_on");
-			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); map.removeLayer(NPNRU_reg_S);};
-			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat); map.addLayer(NPNRU_nat_S);}
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat-titre').setAttribute("class", "bouton");
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); };
+			if (map.hasLayer(NPNRU_nat_val)) {map.removeLayer(NPNRU_nat_val); };
+			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat); }
+		}); 
+		
+		document.getElementById("bouton-int-nat-titre").addEventListener("click", function(event){
+			event.stopPropagation();
+			document.getElementById('bouton-int-nat').setAttribute("class", "bouton_on");
+			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton_on");
+			document.getElementById('bouton-int-nat-titre').setAttribute("class", "bouton_on");
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); };
+			if (map.hasLayer(NPNRU_nat)==false) {map.addLayer(NPNRU_nat);};
+			if (map.hasLayer(NPNRU_nat_val)==false) {map.addLayer(NPNRU_nat_val);};
 		}); 
 		
 		document.getElementById("bouton-int-reg").addEventListener("click", function(event){
 			event.stopPropagation();
-			document.getElementById('bouton-int-conv').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton_on");
-			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat); map.removeLayer(NPNRU_nat_S);};
-			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg); map.addLayer(NPNRU_reg_S);}
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
+			document.getElementById('bouton-int-nat-titre').setAttribute("class", "bouton");
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat); };
+			if (map.hasLayer(NPNRU_nat_val)) {map.removeLayer(NPNRU_nat_val); };
+			if (map.hasLayer(NPNRU_reg)==false) {map.addLayer(NPNRU_reg); }
 		}); 
 		
-		document.getElementById("bouton-int-conv").addEventListener("click", function(event){
+		document.getElementById("bouton-int-nat-val").addEventListener("click", function(event){
 			event.stopPropagation();
-			document.getElementById('bouton-int-conv').setAttribute("class", "bouton_on");
+			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton_on");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
-			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat); map.removeLayer(NPNRU_nat_S);}
-			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg); map.removeLayer(NPNRU_reg_S);}
-			map.addLayer(NPNRU_nat_S_select);
-			map.addLayer(NPNRU_nat_select);
+			document.getElementById('bouton-int-nat-titre').setAttribute("class", "bouton");
+			if (map.hasLayer(NPNRU_nat)) {map.removeLayer(NPNRU_nat);};
+			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);};
+			if (map.hasLayer(NPNRU_nat_val)==false) {map.addLayer(NPNRU_nat_val); }
 		});
 		
+		/*Outil de contrôle
 		
+		var poiLayers = L.layerGroup([
+		NPNRU_nat,
+		NPNRU_nat_val,
+		NPNRU_reg
+		]);
+		
+		var searchControl = new L.Control.Search({
+			layer: poiLayers,
+			propertyName: 'COMMUNE_QP',
+			initial: false,
+			marker: false,
+			moveToLocation: function(latlng, title, map) {
+				map.setView(latlng, 9,{duration: 0.5 });
+			}
+		});
+
+		searchControl.on('search:locationfound', function(e) {
+			//console.log(e.layer);
+			var markerRecherche = e.layer;
+			infos(markerRecherche);
+		//map.removeLayer(this._markerSearch)
+		//e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+		/*if(e.layer._popup)
+			e.layer.openPopup();
+			}).on('search:collapsed', function(e) {
+				featuresLayer.eachLayer(function(layer) {	//restore feature color
+				featuresLayer.resetStyle(layer);
+				});	
+			});
+	
+		map.addControl( searchControl ); */  //inizialize search control
+
 
    </script>
 	
