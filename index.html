@@ -16,19 +16,18 @@
 	<style>
 
 		body {
-            padding: 0;
-            margin: 0;
+        padding: 0;
+        margin: 0;
         }
 
         html, body, #mapid {
-            height: 100%;
-            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        height: 100%;
+        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
         }
 
         .lorem {
-            font-style: italic;
-            color: #1d1d1b;
-			em:1.2;
+        color: #1d1d1b;
+		em:0.8;
         }
 		
 		.TooltipsREG {
@@ -45,9 +44,13 @@
 		background-color: #f0f1ff;
 		}
 	
-	
+		.petit {
+		opacity: 0.7;
+		font-style: italic;
+		}
+		
 		.leaflet-popup-tip-container {
-			display: none;
+		display: none;
 		} 
 		
 		.bouton {
@@ -68,7 +71,7 @@
 		}
 		
 		.presentation {
-			display: block;
+		display: block;
 		}
 		
 		#popup {
@@ -76,7 +79,6 @@
 		}
 		
 		h1{
-			em:2;
 			text-transform: uppercase;
 			color:#004494;
 			text-align:center;
@@ -84,7 +86,7 @@
 	
 		h2{
 			em:1.8;
-			color: #1d1d1b;
+			color: #004494;
 		}
 		
 		h3{
@@ -102,7 +104,7 @@
         <div class="sidebar-tabs">
             <ul role="tablist">
                 <li><a href="#home" role="tab" id="logo_acv"><i class="fa"><img src="img/logo_anru-01.png" style="width:30px;padding:5px"  /></i></a></li>
-                <li><a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" role="tab" target="_blank" title="Site de l'ANRU"><i class="fa fa-home"></i></a></li>
+                <li><a href="http://www.cget.gouv.fr" role="tab" target="_blank" title="Retour au site du CGET"><i class="fa fa-home"></i></a></li>
 				<li><a href="https://cget-carto.github.io/npnru/img/NPNRU_carteA3_BD.jpg" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
             </ul>
         </div>
@@ -117,20 +119,22 @@
 				
 				<div class="presentation" id="defaut">
 					<h1>Nouveau Programme National de Renouvellement Urbain</h1>
-					<p>Texte de présentation générale du programme NPNRU: calendrier - partenaires - objectifs - enjeux - quels territoires - rôle de l'ANRU</p>
-					<p>Carte interactive de suivi du programme : intérêt d'avoir une carte interactive avec mise à jour en temps réèl (?) - qui signe les conventions - de quelle façon</p>
+					
+					<p class="petit">Cliquer sur un quartier pour avoir plus d'infos ou cliquer sur la légende pour idenfier un type de quartier sur la carte</p>
 					<h2>Quartiers prioritaires de la politique de la ville bénéficiant du NPNRU</h2>
-					<p><i>Cliquer sur un quartier pour avoir plus d'infos ou sélectionner un type de quartier pour l'idenfier sur la carte</i></p>
 					<h3 id="bouton-int-nat-titre" class="bouton">216 quartiers d'intérêt national</h3>
 					<div class="bouton" id="bouton-int-nat-val"><img id="picto_nat" src="img/pictos_leg_national_val_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet validé</div>
 					<div class="bouton" id="bouton-int-nat"><img id="picto_reg" src="img/pictos_leg_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet non validé</div>
-					
 					<h3>264 quartiers d'intérêt régional</h3>
 					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/pictos_leg_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
-					
-					
 					<br/>
-					<p><i>Sources : <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018, </a><a href="http://www.onpv.fr/" style="text-decoration:none;" target="_blanck ">ONPV</a> • Réalisation : <a href="http://www.cget.gouv.fr/ressources/cartotheque" style="text-decoration:none;" target="_blanck ">CGET service cartographie</a></i></p>
+					<h2>Le nouveau programme de renouvellement urbain</h2>
+					<p class="lorem">Lancé en 2014, le nouveau programme national de renouvellement urbain (NPNRU) concerne <strong>480 quartiers prioritaires</strong> : 216 d’intérêt national et 264 d’intérêt régional, où vivent environ trois millions d’habitants. Ce programme porte sur des quartiers de grandes métropoles, des villes moyennes, de grands ensembles d’habitat social , des immeubles dans les centres anciens dégradés, situés dans l’Hexagone et en outre-mer.</p>
+					<p class="lorem">À travers de vastes projets urbains, le NPNRU consiste à améliorer l’habitat, à repenser, à transformer et à réaménager les espaces et équipements collectifs de ces quartiers en les connectant à la ville, notamment par une meilleure desserte en transports, à y installer des commerces et des activités d’entreprise, dans un souci d’<strong>amélioration du cadre de vie et de mixité sociale.</strong></p>
+					<p class="lorem">L’Agence nationale de la rénovation urbaine (Anru), chargée de la mise en œuvre du NPNRU, dispose désormais de 10 milliards d’euros pour le soutien financier des projets présentés par les collectivités. Au total, <strong>40 milliards d’euros</strong> seront investis dans ces 480 quartiers pour des opérations de démolition et de reconstitution de logements sociaux, d’aménagement d’espaces publics ou bien encore de traitement des copropriétés dégradées.</p>
+					<p class="lorem">Les projets du NPNRU doivent être élaborés en impliquant les habitants des quartiers, à travers les conseils citoyens notamment, aux différentes étapes du projet de transformation de leur quartier.</p>
+					<br/>
+					<p><i>Sources : <a href="https://www.anru.fr/fre/Programmes/Nouveau-Programme-National-de-Renouvellement-Urbain" style="text-decoration:none;" target="_blanck ">ANRU 2018, </a><a href="http://www.onpv.fr/" style="text-decoration:none;" target="_blanck ">ONPV</a> • Réalisation : <a href="http://www.cget.gouv.fr/ressources/cartotheque" style="text-decoration:none;" target="_blanck ">CGET service cartographie</a> • Dernière mise à jour : 18 septembre 2018</i></p>
 				</div>
 
 				<div id="popup">
@@ -139,7 +143,7 @@
 					<p id="interet" ></p> 
 					<p id="date" ></p>
 					<p id="epci" ></p>
-					<p id="region" class="lorem"></p>
+					<p id="region"></p>
 					<p id="plus"></p>					
 				</div>
 				
@@ -161,9 +165,7 @@
 	<script type="text/javascript" src="data/masque.js"></script>
 	<script type="text/javascript" src="data/departements.js"></script>
 	<script type="text/javascript" src="data/regions.js"></script>
-	<script type="text/javascript" src="data/epci2018.js"></script>
 	<script type="text/javascript" src="data/npnru_p.js"></script>
-	<script type="text/javascript" src="data/npnru_s.js"></script>
 	<script type="text/javascript" src="data/cercles_drom.js"></script>
 	
 	
@@ -187,53 +189,19 @@
 		// Choix du fond de carte 
 		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
 		apikey: 'choisirgeoportail',
+		attribution: '<a target="_blank" href="https://www.cget.gouv.fr/ressources/cartotheque">CGET</a>',
 		format: 'image/png',
 		style: 'bdparcellaire'
 		});
-		//GeoportailFrance_parcels.addTo(map);
-
-		/*function Showlabel(feature,layer){
-		layer.bindTooltip(feature.properties.codgeo, {className: 'Tooltips', direction: "center", permanent: true});
-		}*/
 		
 		//Ajout des couches du fond de carte
 		Cache = L.geoJSON(JS_masque, {color: "#f0f1ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
 		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#a8bdff"}).addTo(map);
 		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
 		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0}).addTo(map);
-		//Contour_Regions_notGEN = L.geoJSON(JS_reg_notGEN, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0});
 		Departements = L.geoJSON(JS_dep, {
 			style:{color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}
-			//onEachFeature : Showlabel
 		}).addTo(map);
-		//Departements_notGEN = L.geoJSON(JS_dep_notGEN, {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0});
-		//Communes = L.geoJSON(JS_com2018, {color: "#ffffff", weight: 0.5, opacity: 0.7, fillOpacity: 0});
-		/*EPCI = L.geoJSON(JS_epci2018, {
-			style: {fillColor: "red", weight: 0, opacity: 1, fillOpacity: 1},
-			filter: function(feature, layer) {
-                return feature.properties.CONVENTION == "oui";
-				},
-			onEachFeature: onEachFeature
-			}).addTo(map);*/
-		
-
-		
-		//Modification des couches du fond de carte avec le zoom sur la carte
-		/*map.on('zoomend', function zoomendEvent() {
-			var zoom = map.getZoom();
-			if (zoom > 8 && map.hasLayer(Contour_Regions)) {
-				map.removeLayer(Contour_Regions);
-				map.removeLayer(Departements);
-				map.addLayer(Departements_notGEN);
-				map.addLayer(Contour_Regions_notGEN);
-				}
-			else if (zoom < 9 && map.hasLayer(Contour_Regions_notGEN)) {
-				map.removeLayer(Departements_notGEN);
-				map.removeLayer(Contour_Regions_notGEN);
-				map.addLayer(Contour_Regions);
-				map.addLayer(Departements);
-				}
-		})*/
 		
 		// Action au clic sur un marker
 		var markerSelectionne;
@@ -252,9 +220,6 @@
 				}
 			
 			markerSelectionne = e.target;
-			//if(markerRecherche) {
-			//markerSetectionne = e;
-			//}
 			
 			if (markerSelectionne.feature.properties.INTERET == "national" && markerSelectionne.feature.properties.VALIDE == "oui") {
 				markerSelectionne.setIcon(national_val_on);
@@ -267,7 +232,7 @@
 			document.getElementById('defaut').style.display = "none";
 			document.getElementById('date').style.display = "none";
 			document.getElementById('libgeo').innerHTML = e.target.feature.properties.COMMUNE_QP+" ("+e.target.feature.properties.DEP+")";
-			document.getElementById('quartier').innerHTML = "<font color='#"+color+"'>"+e.target.feature.properties.NOM_QP+"</font>";
+			document.getElementById('quartier').innerHTML = "Quartier <font color='#"+color+"'>"+e.target.feature.properties.NOM_QP+"</font>";
 			document.getElementById('epci').innerHTML = "Intercommunalité(s) signataire(s) : <strong>"+e.target.feature.properties.libgeo;
 			document.getElementById('region').innerHTML = "Région <strong>"+e.target.feature.properties.NREG+"</strong>";
 			document.getElementById('interet').innerHTML = "Quartier d'intérêt <strong><font color='#"+color+"'>"+e.target.feature.properties.INTERET+"</font></strong>";
@@ -275,7 +240,7 @@
 				document.getElementById('date').innerHTML = "Projet validé : <strong>"+e.target.feature.properties.VALIDATION+"</strong>";
 				document.getElementById('date').style.display = "block";
 				}
-			document.getElementById('plus').innerHTML = "<a href='https://sig.ville.gouv.fr/Territoire/"+e.target.feature.properties.CODE_QP+" ' style='text-decoration:none;' target='_blanck'>Pour en savoir plus</a>";
+			document.getElementById('plus').innerHTML = "<a href='https://sig.ville.gouv.fr/Territoire/"+e.target.feature.properties.CODE_QP+"' title='Site du SIG ville' style='text-decoration:none;' target='_blanck'>&rarr; En savoir plus sur ce quartier</a>";
 		}
 		
 		//Création de la sidebar
@@ -318,7 +283,6 @@
 					}
 		}).addTo(map)
 		
-		
 		//Events au clic sur la carte
 		map.on('click', function(e) {  
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
@@ -333,12 +297,7 @@
 			if (document.getElementById('sidebar').classList.contains('collapsed')) {
 				sidebar.open('home');
 				map.panTo([46.5, -3],{duration: 0.5 });
-			}
-			//else {
-			//	sidebar.close();
-			//	map.panTo([46.5, 2],{duration: 0.5 });
-			//}
-			}
+			}}
 		});
 		
 		document.getElementById("sidebar").addEventListener("click", function(){
@@ -358,14 +317,11 @@
 		document.getElementById('defaut').style.display = "block";
 		if(map.getZoom() < 8){
 		if (document.getElementById('sidebar').classList.contains('collapsed')) {
-		//map.panTo([46.5, 2],{duration: 0.5 });
 		sidebar.open('home');}
 		else {map.panTo([46.5, -3],{duration: 0.5 });}
 		}
 		});
 		
-		
-
 		document.getElementById("close").addEventListener("click", function(){
 		if(map.getZoom() < 8){
 		if (document.getElementById('sidebar').classList.contains('collapsed') && map.getZoom() < 8) {
@@ -417,40 +373,6 @@
 			if (map.hasLayer(NPNRU_reg)) {map.removeLayer(NPNRU_reg);};
 			if (map.hasLayer(NPNRU_nat_val)==false) {map.addLayer(NPNRU_nat_val); }
 		});
-		
-		/*Outil de contrôle
-		
-		var poiLayers = L.layerGroup([
-		NPNRU_nat,
-		NPNRU_nat_val,
-		NPNRU_reg
-		]);
-		
-		var searchControl = new L.Control.Search({
-			layer: poiLayers,
-			propertyName: 'COMMUNE_QP',
-			initial: false,
-			marker: false,
-			moveToLocation: function(latlng, title, map) {
-				map.setView(latlng, 9,{duration: 0.5 });
-			}
-		});
-
-		searchControl.on('search:locationfound', function(e) {
-			//console.log(e.layer);
-			var markerRecherche = e.layer;
-			infos(markerRecherche);
-		//map.removeLayer(this._markerSearch)
-		//e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-		/*if(e.layer._popup)
-			e.layer.openPopup();
-			}).on('search:collapsed', function(e) {
-				featuresLayer.eachLayer(function(layer) {	//restore feature color
-				featuresLayer.resetStyle(layer);
-				});	
-			});
-	
-		map.addControl( searchControl ); */  //inizialize search control
 
 
    </script>
