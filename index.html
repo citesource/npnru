@@ -12,90 +12,8 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" /><![endif]-->
 
     <link rel="stylesheet" href="src/leaflet-sidebar.css" />
-
-	<style>
-
-		body {
-        padding: 0;
-        margin: 0;
-        }
-
-        html, body, #mapid {
-        height: 100%;
-        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
-        }
-
-        .lorem {
-        color: #1d1d1b;
-		em:0.8;
-        }
-		
-		.TooltipsREG {
-		em:0.7;
-		font-weight: bold;
-		color: #ac003f;
-		background-color: #f0f1ff;
-		}
-		
-		.TooltipsNAT {
-		em:0.7;
-		font-weight: bold;
-		color: #ff6400;
-		background-color: #f0f1ff;
-		}
+	<link rel="stylesheet" href="style.css" />
 	
-		.petit {
-		opacity: 0.7;
-		font-style: italic;
-		}
-		
-		.leaflet-popup-tip-container {
-		display: none;
-		} 
-		
-		.bouton {
-		color:#1d1d1b;
-		font-weight: bold;
-		cursor: pointer;
-		height: 21px;
-		}
-		
-		.bouton:hover {
-		color: #004494;
-		}
-		
-		.bouton_on {
-		color: red;
-		font-weight: bold;
-		height: 21px;
-		}
-		
-		.presentation {
-		display: block;
-		}
-		
-		#popup {
-			display: none;
-		}
-		
-		h1{
-			text-transform: uppercase;
-			color:#004494;
-			text-align:center;
-		}
-	
-		h2{
-			em:1.8;
-			color: #004494;
-		}
-		
-		h3{
-			em:1.4;
-			color: #1d1d1b;
-		}
-
-
-</style>
 </head>
 
 <body>
@@ -105,7 +23,7 @@
             <ul role="tablist">
                 <li><a href="#home" role="tab" id="logo_acv"><i class="fa"><img src="img/logo_anru-01.png" style="width:30px;padding:5px"  /></i></a></li>
                 <li><a href="https://www.cget.gouv.fr" role="tab" target="_blank" title="Retour sur le site du CGET"><img src="img/logo_cget.png" /></a></li>
-				<li><a href="https://cget-carto.github.io/npnru/img/NPNRU_carteA3_BD.jpg" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
+				<li><a href="img/Carte_NPNRU_France.pdf" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
             </ul>
         </div>
 
@@ -186,17 +104,29 @@
 			national_val_off = new L.Icon({iconUrl: 'img/pictos_national_val_off.png', iconSize: [19,19], iconAnchor:[9.5,9.5]}),
 			national_val_on = new L.Icon({iconUrl: 'img/pictos_national_val_on.png', iconSize: [27,27], iconAnchor:[13.5,13.5]});
 			
-		// Choix du fond de carte 
+		/* Choix du fond de carte 
 		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
 		apikey: 'choisirgeoportail',
 		attribution: '<a target="_blank" href="https://www.cget.gouv.fr/ressources/cartotheque">CGET</a>',
 		format: 'image/png',
 		style: 'bdparcellaire'
+		});*/
+		
+		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+		attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+		bounds: [[-75, -180], [81, 180]],
+		minZoom: 2,
+		maxZoom: 20,
+		apikey: 'choisirgeoportail',
+		format: 'image/png',
+		style: 'bdparcellaire'
 		});
 		
+		GeoportailFrance_parcels.addTo(map);
+		
 		//Ajout des couches du fond de carte
-		Cache = L.geoJSON(JS_masque, {color: "#f0f1ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
-		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#a8bdff"}).addTo(map);
+		//Cache = L.geoJSON(JS_masque, {color: "#f0f1ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
+		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 0.2, fillColor:"#a8bdff"}).addTo(map);
 		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
 		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0}).addTo(map);
 		Departements = L.geoJSON(JS_dep, {

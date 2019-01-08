@@ -1,0 +1,79 @@
+
+		body {
+        padding: 0;
+        margin: 0;
+        }
+
+        html, body, #mapid {
+        height: 100%;
+        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+
+        .lorem {
+        color: #1d1d1b;
+		em:0.8;
+        }
+		
+		.TooltipsREG {
+		em:0.7;
+		font-weight: bold;
+		color: #ac003f;
+		background-color: #f0f1ff;
+		}
+		
+		.TooltipsNAT {
+		em:0.7;
+		font-weight: bold;
+		color: #ff6400;
+		background-color: #f0f1ff;
+		}
+	
+		.petit {
+		opacity: 0.7;
+		font-style: italic;
+		}
+		
+		.leaflet-popup-tip-container {
+		display: none;
+		} 
+		
+		.bouton {
+		color:#1d1d1b;
+		font-weight: bold;
+		cursor: pointer;
+		height: 21px;
+		}
+		
+		.bouton:hover {
+		color: #004494;
+		}
+		
+		.bouton_on {
+		color: red;
+		font-weight: bold;
+		height: 21px;
+		}
+		
+		.presentation {
+		display: block;
+		}
+		
+		#popup {
+			display: none;
+		}
+		
+		h1{
+			text-transform: uppercase;
+			color:#004494;
+			text-align:center;
+		}
+	
+		h2{
+			em:1.8;
+			color: #004494;
+		}
+		
+		h3{
+			em:1.4;
+			color: #1d1d1b;
+		}
