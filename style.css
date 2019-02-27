@@ -11,20 +11,20 @@
 
         .lorem {
         color: #1d1d1b;
-		em:0.8;
+		font-size:1em;
         }
 		
-		.TooltipsREG {
-		em:0.7;
+		.Tooltipsregional {
+		font-size:1em;
 		font-weight: bold;
-		color: #ac003f;
+		color: #ff005a;
 		background-color: #f0f1ff;
 		}
 		
-		.TooltipsNAT {
-		em:0.7;
+		.Tooltipsnational {
+		font-size:1em;
 		font-weight: bold;
-		color: #ff6400;
+		color: #ff8700;
 		background-color: #f0f1ff;
 		}
 	
@@ -64,16 +64,30 @@
 		
 		h1{
 			text-transform: uppercase;
-			color:#004494;
+			color:#00005d;
 			text-align:center;
 		}
 	
 		h2{
-			em:1.8;
-			color: #004494;
+			font-size:1.8em;
+			color: #00005d;
 		}
 		
 		h3{
-			em:1.4;
+			font-size:1.4em;
 			color: #1d1d1b;
+		}
+		
+		.labelClass {
+		text-transform: uppercase;
+		color: black;
+		font-size:0.7em;
+		font-weight:bold;
+		text-shadow: white 0.1em 0.1em 0.2em
+		}
+		
+		a {
+		text-decoration:none;
+		font-weight:bold;
+		font-size:1.2em;
 		}

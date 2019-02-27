@@ -2,7 +2,7 @@
 	Name					Data passed			   Description
 
 	Managed Events:
-	 search:locationfound	{latlng, title, layer} fired after moved and show markerLocation
+	 search:locationfound	{latlng, libgeo, layer} fired after moved and show markerLocation
 	 search:expanded		{}					   fired after control was expanded
 	 search:collapsed		{}					   fired after control was collapsed
  	 search:cancel			{}					   fired after cancel button clicked
@@ -61,11 +61,11 @@ L.Control.Search = L.Control.extend({
 		sourceData: null,				//function to fill _recordsCache, passed searching text by first param and callback in second				
 		//TODO implements uniq option 'sourceData' to recognizes source type: url,array,callback or layer				
 		jsonpParam: null,				//jsonp param name for search by jsonp service, ex: "callback"
-		propertyLoc: 'loc',				//field for remapping location, using array: ['latname','lonname'] for select double fields(ex. ['lat','lon'] ) support dotted format: 'prop.subprop.title'
+		propertyLoc: 'loc',				//field for remapping location, using array: ['latname','lonname'] for select double fields(ex. ['lat','lon'] ) support dotted format: 'prop.subprop.libgeo'
 		propertyName: 'title',			//property in marker.options(or feature.properties for vector layer) trough filter elements in layer,
 		formatData: null,				//callback for reformat all data from source to indexed data object
 		filterData: null,				//callback for filtering data from text searched, params: textSearch, allRecords
-		moveToLocation: null,			//callback run on location found, params: latlng, title, map
+		moveToLocation: null,			//callback run on location found, params: latlng, libgeo, map
 		buildTip: null,					//function to return row tip html node(or html string), receive text tooltip in first param
 		container: '',					//container id to insert Search Control		
 		zoom: null,						//default zoom level for move to location
@@ -81,9 +81,9 @@ L.Control.Search = L.Control.extend({
 		collapsed: true,				//collapse search control at startup
 		autoCollapse: false,			//collapse search control after submit(on button or on tips if enabled tipAutoSubmit)
 		autoCollapseTime: 1200,			//delay for autoclosing alert and collapse after blur
-		textErr: 'Quartier non trouvé',	//error message
-		textCancel: 'Effacer',		    //title in cancel button		
-		textPlaceholder: 'Rechercher un nom de quartier...',   //placeholder value			
+		textErr: 'Lieu non trouvé',	//error message
+		textCancel: 'Effacer',		    //libgeo in cancel button		
+		textPlaceholder: 'Rechercher quartier ou une commune',   //placeholder value			
 		hideMarkerOnCollapse: false,    //remove circle and marker on search control collapsed		
 		position: 'topleft',		
 		marker: {						//custom L.Marker or false for hide
@@ -319,10 +319,10 @@ L.Control.Search = L.Control.extend({
 		return input;
 	},
 
-	_createCancel: function (title, className) {
+	_createCancel: function (libgeo, className) {
 		var cancel = L.DomUtil.create('a', className, this._container);
 		cancel.href = '#';
-		cancel.title = title;
+		cancel.libgeo = libgeo;
 		cancel.style.display = 'none';
 		cancel.innerHTML = "<span>&otimes;</span>";//imageless(see css)
 
@@ -333,10 +333,10 @@ L.Control.Search = L.Control.extend({
 		return cancel;
 	},
 	
-	_createButton: function (title, className) {
+	_createButton: function (libgeo, className) {
 		var button = L.DomUtil.create('a', className, this._container);
 		button.href = '#';
-		button.title = title;
+		button.libgeo = libgeo;
 
 		L.DomEvent
 			.on(button, 'click', L.DomEvent.stop, this)
@@ -872,14 +872,14 @@ L.Control.Search = L.Control.extend({
 			return false;
 	},
 
-	_defaultMoveToLocation: function(latlng, title, map) {
+	_defaultMoveToLocation: function(latlng, libgeo, map) {
 		if(this.options.zoom)
  			this._map.setView(latlng, this.options.zoom);
  		else
 			this._map.panTo(latlng);
 	},
 
-	showLocation: function(latlng, title) {	//set location on map from _recordsCache
+	showLocation: function(latlng, libgeo) {	//set location on map from _recordsCache
 		var self = this;
 
 		self._map.once('moveend zoomend', function(e) {
@@ -890,7 +890,7 @@ L.Control.Search = L.Control.extend({
 			
 		});
 
-		self._moveToLocation(latlng, title, self._map);
+		self._moveToLocation(latlng, libgeo, self._map);
 		//FIXME autoCollapse option hide self._markerSearch before visualized!!
 		if(self.options.autoCollapse)
 			self.collapse();

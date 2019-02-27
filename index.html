@@ -23,7 +23,7 @@
             <ul role="tablist">
                 <li><a href="#home" role="tab" id="logo_acv"><i class="fa"><img src="img/logo_anru-01.png" style="width:30px;padding:5px"  /></i></a></li>
                 <li><a href="https://www.cget.gouv.fr" role="tab" target="_blank" title="Retour sur le site du CGET"><img src="img/logo_cget.png" /></a></li>
-				<li><a href="img/NPNRU_carteA3_BD.jpg" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
+				<li><a href="img/CARTE_NPNRU_A3.pdf" role="tab" target="_blank" title="Télécharger la carte"><i class="fa fa-download"></i></a></li>
             </ul>
         </div>
 
@@ -41,10 +41,10 @@
 					<p class="petit">Cliquer sur un quartier pour avoir plus d'infos ou cliquer sur la légende pour idenfier un type de quartier sur la carte</p>
 					<h2>Quartiers prioritaires de la politique de la ville bénéficiant du NPNRU</h2>
 					<h3 id="bouton-int-nat-titre" class="bouton">216 quartiers d'intérêt national</h3>
-					<div class="bouton" id="bouton-int-nat-val"><img id="picto_nat" src="img/pictos_leg_national_val_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet validé</div>
-					<div class="bouton" id="bouton-int-nat"><img id="picto_reg" src="img/pictos_leg_national_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet non validé</div>
+					<div class="bouton" id="bouton-int-nat-val"><img id="picto_nat" src="img/picto_val_on.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet validé</div>
+					<div class="bouton" id="bouton-int-nat"><img id="picto_reg" src="img/picto_nat_on.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Projet non validé</div>
 					<h3>264 quartiers d'intérêt régional</h3>
-					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/pictos_leg_regional_off.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
+					<div class="bouton" id="bouton-int-reg"><img id="picto_reg" src="img/picto_reg_on.png" style="width:17px; padding-right:5px; vertical-align:middle;" />Quartier d'intérêt régional</div>
 					<br/>
 					<h2>Le nouveau programme de renouvellement urbain</h2>
 					<p class="lorem">Lancé en 2014, le nouveau programme national de renouvellement urbain (NPNRU) concerne <strong>480 quartiers prioritaires : 216 d’intérêt national et 264 d’intérêt régional</strong>, où vivent environ <strong>trois millions d’habitants</strong>. Ce programme porte sur des quartiers de grandes métropoles, des villes moyennes, de grands ensembles d’habitat social ou des immeubles dans les centres anciens dégradés, situés dans l’Hexagone et en outre-mer.</p>
@@ -78,40 +78,52 @@
 	<div id="mapid" class="sidebar-map"></div>
 	
     <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>
+	<script src="src/BoundaryCanvas.js"></script>
 	<script src="src/leaflet-search.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
     <script src="https://turbo87.github.io/sidebar-v2/js/leaflet-sidebar.js"></script>
 	<script type="text/javascript" src="data/masque.js"></script>
 	<script type="text/javascript" src="data/departements.js"></script>
 	<script type="text/javascript" src="data/regions.js"></script>
-	<script type="text/javascript" src="data/npnru_p.js"></script>
 	<script type="text/javascript" src="data/cercles_drom.js"></script>
+	<script type="text/javascript" src="data/france.js"></script>
+	<script type="text/javascript" src="data/geoData.js"></script>
+	<script type="text/javascript" src="data/chef_lieu.js"></script>
 	
 	
     <script>
 		
-			
 		// Création de la carte
-		var map = L.map('mapid', {maxZoom:11, minZoom:6 
+		var map = L.map('mapid', {
+			maxZoom:11,
+			minZoom:6 
 		})
 		.setView([46.5, 2], 6);
-		map.zoomControl.setPosition('topright');
-		
+		map.zoomControl.setPosition('topleft');
+		map.attributionControl.addAttribution('<a href="https://cartotheque.cget.gouv.fr/cartes?filters%5Bquery%5D=interactif&current_page=1&category=&page_size=20" style="text-decoration:none;" target="_blank ">CGET</a>');
+	
 		//Définition des pictos
-		var	regional_off = new L.Icon({iconUrl: 'img/pictos_regional_off.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			regional_on = new L.Icon({iconUrl: 'img/pictos_regional_on.png', iconSize: [23,23], iconAnchor:[11.5,11.5]}),
-			national_off = new L.Icon({iconUrl: 'img/pictos_national_off.png', iconSize: [17,17], iconAnchor:[7.8,7.8]}),
-			national_on = new L.Icon({iconUrl: 'img/pictos_national_on.png', iconSize: [25,25], iconAnchor:[12.5,12.5]}),
-			national_val_off = new L.Icon({iconUrl: 'img/pictos_national_val_off.png', iconSize: [19,19], iconAnchor:[9.5,9.5]}),
-			national_val_on = new L.Icon({iconUrl: 'img/pictos_national_val_on.png', iconSize: [27,27], iconAnchor:[13.5,13.5]});
-			
-		/* Choix du fond de carte 
-		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
-		apikey: 'choisirgeoportail',
-		attribution: '<a target="_blank" href="https://www.cget.gouv.fr/ressources/cartotheque">CGET</a>',
-		format: 'image/png',
-		style: 'bdparcellaire'
-		});*/
+		var	regional_off = new L.Icon({iconUrl: 'img/picto_reg_off.png', iconSize: [10,10], iconAnchor:[5,5]}),
+			regional_on = new L.Icon({iconUrl: 'img/picto_reg_on.png', iconSize: [27,27], iconAnchor:[13.5,13.5]}),
+			national_off = new L.Icon({iconUrl: 'img/picto_nat_off.png', iconSize: [12,12], iconAnchor:[6,6]}),
+			national_on = new L.Icon({iconUrl: 'img/picto_nat_on.png', iconSize: [26,26], iconAnchor:[13,13]}),
+			national_val_off = new L.Icon({iconUrl: 'img/picto_val_off.png', iconSize: [22,22], iconAnchor:[11,11]}),
+			national_val_on = new L.Icon({iconUrl: 'img/picto_val_on.png', iconSize: [32,32], iconAnchor:[16,16]});
+			select = new L.Icon({iconUrl: 'img/picto_select.png', iconSize: [34,34], iconAnchor:[17,17]});
 		
+		//Gestion de l'ordre d'affichage des couches
+		map.createPane('geoportail');
+		map.getPane('geoportail').style.zIndex = 200;
+		map.createPane('labels');
+		map.getPane('labels').style.zIndex = 600;
+		map.createPane('select');
+		map.getPane('select').style.zIndex = 500;
+		map.createPane('fond');
+		map.getPane('fond').style.zIndex = 150;
+		map.createPane('fondfrance');
+		map.getPane('fondfrance').style.zIndex = 170;
+		
+		//Fond géoportail noir et blanc
 		var GeoportailFrance_parcels = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=CADASTRALPARCELS.PARCELS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
 		attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
 		bounds: [[-75, -180], [81, 180]],
@@ -119,102 +131,172 @@
 		maxZoom: 20,
 		apikey: 'choisirgeoportail',
 		format: 'image/png',
+		pane: 'geoportail',
 		style: 'bdparcellaire'
 		});
+		//GeoportailFrance_parcels.addTo(map);
 		
-		GeoportailFrance_parcels.addTo(map);
+		//Ajout de la légende sur la carte
+		var imageUrl = 'img/picto_legende.png',
+		imageBounds = [[52, -5.0],[50.1, 0.85]];
+		L.imageOverlay(imageUrl, imageBounds, {zIndex : '1000'} ).addTo(map);
 		
 		//Ajout des couches du fond de carte
-		//Cache = L.geoJSON(JS_masque, {color: "#f0f1ff", weight: 0, opacity: 1, fillOpacity: 1}).addTo(map);
-		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 0.2, fillColor:"#a8bdff"}).addTo(map);
-		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0}).addTo(map);
-		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0}).addTo(map);
+		Cache = L.geoJSON(JS_masque, {color: "#00005d", weight: 0, opacity: 1, fillOpacity: 1, interactive: false, pane: 'fond'}).addTo(map);
+		Fond_Regions = L.geoJSON(JS_reg, {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#d9d9d9", interactive: false, pane: 'fondfrance'}).addTo(map);
+		Contour_Regions = L.geoJSON(JS_reg, {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0, interactive: false}).addTo(map);
+		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 2, opacity: 0.7, fillOpacity: 0, interactive: false}).addTo(map);
 		Departements = L.geoJSON(JS_dep, {
-			style:{color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0}
+			style:{color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0, interactive: false}
 		}).addTo(map);
+		Commune = L.geoJSON(JS_todo, {
+			filter: function(feature, layer) {return feature.properties.Type == "commune";}
+		});
 		
-		// Action au clic sur un marker
-		var markerSelectionne;
-		var color="ac003f";
+		DepartementsZoom = L.geoJSON(JS_todo, {
+			filter: function(feature, layer) {return feature.properties.Type == "département";},
+			style: {color: "#ffffff", weight: 1, opacity: 1, fillOpacity: 0, interactive: false},
+		});
+		
+		Contour_Regions_Zoom = L.geoJSON(JS_todo, {
+			filter: function(feature, layer) {return feature.properties.Type == "région";},
+			style: {color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0, interactive: false}
+		});
+		
+		Fond_Regions_Zoom = L.geoJSON(JS_todo, {
+			filter: function(feature, layer) {return feature.properties.Type == "région";},
+			style: {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#d9d9d9", interactive: false, pane: 'fondfrance'}
+		});
+		
+		//Création des labels
+		var createLabelIcon = function(labelClass,labelText){
+		return L.divIcon({ 
+		className: labelClass,
+		html: labelText
+		})
+		}
+		
+		labels = L.geoJSON(JS_chef_lieu, {
+				pointToLayer: function(feature, latlng) {
+					return L.marker(latlng,{icon:createLabelIcon("labelClass", feature.properties.libgeom),pane:'labels',interactive: false})
+				},
+				filter : function(feature, layer) {
+                return feature.properties.STATUT == "région";
+				}
+				
+		}).addTo(map)
+		
+		
+		//Ajout des données drive
+		var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1JAw1osHqmTew4muUF7J4yMEa3uBaTVr2nCsdBXngz7k/edit?usp=sharing';
+		
+		function init() {
+			Tabletop.init({ 
+				key: publicSpreadsheetUrl,
+				callback: showInfo,
+				simpleSheet: true
+			})
+		}
+		
+		//Création du layer de markers
+		var NPNRU_reg = new L.layerGroup();
+		var NPNRU_nat = new L.layerGroup();
+		var NPNRU_nat_val = new L.layerGroup();
+		NPNRU_nat_val.addTo(map);
+		NPNRU_reg.addTo(map);
+		NPNRU_nat.addTo(map);
+		
+		//Action au clic sur un marker
+		var color="ff005a";
 		
 		function infos(e) {
-		//console.log(e);
-			if (document.getElementById('sidebar').classList.contains('collapsed')){
-				sidebar.open('home');
-				if (map.getZoom() < 8) {map.setView([46.5, -3], 6);}
-				}
-			if(markerSelectionne){
-				if (markerSelectionne.feature.properties.INTERET == "national" && markerSelectionne.feature.properties.VALIDE == "oui") {markerSelectionne.setIcon(national_val_off);}
-				else if (markerSelectionne.feature.properties.INTERET == "regional"){markerSelectionne.setIcon(regional_off);}
-				else {markerSelectionne.setIcon(national_off);};
-				}
+		
+			if (document.getElementById('sidebar').classList.contains('collapsed')){sidebar.open('home');}
 			
-			markerSelectionne = e.target;
-			
-			if (markerSelectionne.feature.properties.INTERET == "national" && markerSelectionne.feature.properties.VALIDE == "oui") {
-				markerSelectionne.setIcon(national_val_on);
-				 color="ff6400";
-				}
-			else if (markerSelectionne.feature.properties.INTERET == "regional"){markerSelectionne.setIcon(regional_on);color="ac003f";}
-			else {markerSelectionne.setIcon(national_on); color="ff6400";};
+			if (e.properties.INTERET=="régional") {
+			color="ff005a";
+			}
+			else if (e.properties.INTERET=="national") {
+			color="ff8700";
+			}
 			
 			document.getElementById('popup').style.display = "block";
 			document.getElementById('defaut').style.display = "none";
 			document.getElementById('date').style.display = "none";
-			document.getElementById('libgeo').innerHTML = e.target.feature.properties.COMMUNE_QP+" ("+e.target.feature.properties.DEP+")";
-			document.getElementById('quartier').innerHTML = "Quartier <font color='#"+color+"'>"+e.target.feature.properties.NOM_QP+"</font>";
-			document.getElementById('epci').innerHTML = "Intercommunalité(s) signataire(s) : <strong>"+e.target.feature.properties.libgeo;
-			document.getElementById('region').innerHTML = "Région <strong>"+e.target.feature.properties.NREG+"</strong>";
-			document.getElementById('interet').innerHTML = "Quartier d'intérêt <strong><font color='#"+color+"'>"+e.target.feature.properties.INTERET+"</font></strong>";
-			if(markerSelectionne.feature.properties.VALIDE == "oui") {
-				document.getElementById('date').innerHTML = "Projet validé : <strong>"+e.target.feature.properties.VALIDATION+"</strong>";
+			document.getElementById('libgeo').innerHTML = e.properties.COMMUNE_QP+" ("+e.properties.DEP+")";
+			document.getElementById('quartier').innerHTML = "Quartier <font color='#"+color+"'>"+e.properties.libgeo+"</font>";
+			document.getElementById('epci').innerHTML = "Intercommunalité(s) signataire(s) : <strong>"+e.properties.NOM_EPCI;
+			document.getElementById('region').innerHTML = "Région <strong>"+e.properties.NREG+"</strong>";
+			document.getElementById('interet').innerHTML = "Quartier d'intérêt <strong><font color='#"+color+"'>"+e.properties.INTERET+"</font></strong>";
+			if (e.properties.VALIDE == "oui") {
+				document.getElementById('date').innerHTML = "Projet validé : <strong>"+e.properties.VALIDATION+"</strong>";
 				document.getElementById('date').style.display = "block";
 				}
-			document.getElementById('plus').innerHTML = "<a href='https://sig.ville.gouv.fr/Territoire/"+e.target.feature.properties.CODE_QP+"' title='Site du SIG ville' style='text-decoration:none;' target='_blanck'>&rarr; En savoir plus sur ce quartier</a>";
+			document.getElementById('plus').innerHTML = "<a href='https://sig.ville.gouv.fr/Territoire/"+e.properties.CODE_QP+"' title='Site du SIG ville' style='color:#"+color+"' target='_blank'>&rarr; En savoir plus sur ce quartier</a>";
 		}
+		
+		//Une cible sur le marker sélectionné
+		var markerCib;
+		var territoireCib;
+		
+		function markerCible(e) {
+			if(markerCib) {map.removeLayer(markerCib);}
+			markerCib = new L.marker(new L.latLng(e._latlng), {pane: 'select'});
+			markerCib.setIcon(select);			
+			markerCib.addTo(map);
+		}
+		
+		function territoireCible(e) {
+			if(territoireCib) {map.removeLayer(markerCib);}
+			territoireCib = new L.polygon(e, {weight:3, color:"red", fillOpacity: 0});
+			territoireCib.addTo(map);
+		}
+		
+		//Aller chercher les données et créer les markers
+		function showInfo(data, tabletop) {
+			for (var i in data){
+				
+				marker = new L.marker([data[i].LAT, data[i].LNG], {title: data[i].NOM_QP});
+				
+				if (data[i].INTERET == 'régional'){marker.addTo(NPNRU_reg); marker.setIcon(regional_off); marker.on('mouseover', function(e) {e.target.setIcon(regional_on); }); marker.on('mouseout', function(e) {e.target.setIcon(regional_off); });}
+				else if (data[i].INTERET == "national" && (data[i].VALIDE == "non" || data[i].VALIDE == "inconnu")){marker.addTo(NPNRU_nat); marker.setIcon(national_off); marker.on('mouseover', function(e) {e.target.setIcon(national_on); }); marker.on('mouseout', function(e) {e.target.setIcon(national_off); });}
+				else if (data[i].INTERET == "national" && data[i].VALIDE == "oui" ){marker.addTo(NPNRU_nat_val); marker.setIcon(national_val_off); marker.on('mouseover', function(e) {e.target.setIcon(national_val_on); }); marker.on('mouseout', function(e) {e.target.setIcon(national_val_off); });}
+				
+				marker.properties = {};
+				marker.properties.COMMUNE_QP = data[i].COMMUNE_QP;
+				marker.properties.libgeo = data[i].NOM_QP;
+				marker.properties.NOM_EPCI = data[i].NOM_EPCI;
+				marker.properties.DEP = data[i].DEP;
+				marker.properties.NREG = data[i].NREG;
+				marker.properties.VALIDE = data[i].VALIDE;
+				marker.properties.VALIDATION = data[i].VALIDATION;
+				marker.properties.CODE_QP = data[i].CODE_QP;
+				marker.properties.INTERET = data[i].INTERET;
+				
+				marker.bindTooltip(data[i].COMMUNE_QP, {className: 'Tooltips'+data[i].INTERET, closeButton: false});
+				marker.on('click', function(e) {
+					infos(e.target);
+					markerCible(e.target);
+					});
+			
+			}
+		}
+		
+		window.addEventListener('DOMContentLoaded', init);
 		
 		//Création de la sidebar
 		var sidebar = L.control.sidebar('sidebar').addTo(map);
 		
-		//Ajout des couches NPNRU
-		NPNRU_reg = L.geoJSON(JS_npnru_P, {
-				pointToLayer: function(feature, latlng) {
-					return L.marker(latlng,{icon:regional_off}).on('click', function(e) { infos(e);})
-					},
-				filter : function(feature, layer) {
-					return feature.properties.INTERET == "regional";
-					},
-				onEachFeature : function(feature, layer) {
-					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsREG', closeButton: false});
-					}
-		}).addTo(map)
-		
-		NPNRU_nat = L.geoJSON(JS_npnru_P, {
-				pointToLayer: function(feature, latlng) {
-					return L.marker(latlng,{icon:national_off}).on('click', function(e) { infos(e);})
-				},
-				filter : function(feature, layer) {
-                return feature.properties.INTERET == "national" && (feature.properties.VALIDE == "non" || feature.properties.VALIDE == "inconnu")  ;
-				},
-				onEachFeature : function(feature, layer) {
-					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsNAT', closeButton: false});
-					}
-		}).addTo(map)
-		
-		NPNRU_nat_val = L.geoJSON(JS_npnru_P, {
-				pointToLayer: function(feature, latlng) {
-					return L.marker(latlng,{icon:national_val_off}).on('click', function(e) { infos(e);})
-				},
-				filter : function(feature, layer) {
-                return feature.properties.INTERET == "national" && feature.properties.VALIDE == "oui";
-				},
-				onEachFeature : function(feature, layer) {
-					layer.bindTooltip(feature.properties.COMMUNE_QP, {className: 'TooltipsNAT', closeButton: false});
-					}
-		}).addTo(map)
-		
-		//Events au clic sur la carte
+		//Action au clic sur la carte
 		map.on('click', function(e) {  
+			if (document.getElementById('sidebar').classList.contains('collapsed')) {
+				sidebar.open('home');
+			}
+			else {
+				sidebar.close();
+			}
+			if(markerCib) {map.removeLayer(markerCib);}
+			if(territoireCib) {map.removeLayer(territoireCib);}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
@@ -223,14 +305,38 @@
 			map.addLayer(NPNRU_reg); 
 			map.addLayer(NPNRU_nat); 
 			map.addLayer(NPNRU_nat_val);
-			if(map.getZoom() < 8){
-			if (document.getElementById('sidebar').classList.contains('collapsed')) {
-				sidebar.open('home');
-				map.panTo([46.5, -3],{duration: 0.5 });
-			}}
 		});
 		
+		//Configuration des différents zooms
+		var zoom;
+		
+		map.on('zoomend', function(e) {  
+			zoom=map.getZoom();	
+			if (zoom < 9){ //cadrage national
+			if (map.hasLayer(Contour_Regions_Zoom)) {map.removeLayer(Contour_Regions_Zoom);}
+			if (map.hasLayer(DepartementsZoom)) {map.removeLayer(DepartementsZoom);}
+			if (map.hasLayer(Contour_Regions)==false) {map.addLayer(Contour_Regions);}
+			if (map.hasLayer(Departements)==false) {map.addLayer(Departements);}
+			if (map.hasLayer(Fond_Regions)==false) {map.addLayer(Fond_Regions);}
+			if (map.hasLayer(Fond_Regions_Zoom)) {map.removeLayer(Fond_Regions_Zoom);}
+			GeoportailFrance_parcels.removeFrom(map);
+			}
+			else { //cadrage local
+			if (map.hasLayer(Contour_Regions)) {map.removeLayer(Contour_Regions);}
+			if (map.hasLayer(Departements)) {map.removeLayer(Departements);}
+			if (map.hasLayer(Contour_Regions_Zoom)==false) {map.addLayer(Contour_Regions_Zoom);}
+			if (map.hasLayer(DepartementsZoom)==false) {map.addLayer(DepartementsZoom);}
+			GeoportailFrance_parcels.addTo(map);
+			if (map.hasLayer(Fond_Regions)) {map.removeLayer(Fond_Regions);}
+			if (map.hasLayer(Fond_Regions_Zoom)==false) {map.addLayer(Fond_Regions_Zoom);}
+			}
+			
+		});
+		
+		//Action au clic dans la sidebar
 		document.getElementById("sidebar").addEventListener("click", function(){
+			if(markerCib) {map.removeLayer(markerCib);}
+			if(territoireCib) {map.removeLayer(territoireCib);}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat').setAttribute("class", "bouton");
 			document.getElementById('bouton-int-nat-val').setAttribute("class", "bouton");
@@ -241,25 +347,17 @@
 			map.addLayer(NPNRU_nat_val);			
 		});
 		
-		//Carte qui bouge à l'ouverture de la popup
+		//Action au clic sur l'accueil
 		document.getElementById("logo_acv").addEventListener("click", function(){
+		if(markerCib) {map.removeLayer(markerCib);}
+		if(territoireCib) {map.removeLayer(territoireCib);}
+		sidebar.open('home');
 		document.getElementById('popup').style.display = "none";
 		document.getElementById('defaut').style.display = "block";
-		if(map.getZoom() < 8){
-		if (document.getElementById('sidebar').classList.contains('collapsed')) {
-		sidebar.open('home');}
-		else {map.panTo([46.5, -3],{duration: 0.5 });}
-		}
+		map.setView([46.5, 2], 6);
 		});
 		
-		document.getElementById("close").addEventListener("click", function(){
-		if(map.getZoom() < 8){
-		if (document.getElementById('sidebar').classList.contains('collapsed') && map.getZoom() < 8) {
-		map.panTo([46.5, 2],{duration: 0.5 });}
-		else {map.panTo([46.5, -3],{duration: 0.5 });}
-		}
-		}); 
-
+		//Actions de filtre à partir de la légende
 		document.getElementById("bouton-int-nat").addEventListener("click", function(event){
 			if (event.stopPropagation) {event.stopPropagation();}
 			document.getElementById('bouton-int-reg').setAttribute("class", "bouton");
@@ -305,15 +403,30 @@
 		});
 		
 		//Barre de recherche
-		var Recherche = L.layerGroup([NPNRU_nat,NPNRU_nat_val,NPNRU_reg]);
+		var Recherche = L.layerGroup([NPNRU_nat, NPNRU_reg, NPNRU_nat_val, Commune]);
 		
-		L.control.search({
+		//Ajout de la barre de recherche
+		var controlSearch = new L.Control.Search({
+			position:'topleft',		
 			layer: Recherche,
 			initial: false,
-			zoom: 10,
-			propertyName: 'NOM_QP'
-		})
-		.addTo(map);
+			zoom: 11,
+			marker: false
+		});
+		
+		controlSearch.on('search:locationfound', function(e) {
+				if(e.layer._latlng){
+					markerCible(e.layer);
+					infos(e.layer);
+				}
+				else if (e.layer._latlngs){
+					territoireCible(e.layer._latlngs);
+				}
+		});
+		
+		map.addControl( controlSearch );
+		
+		map.removeLayer(Commune);
 
 
    </script>
